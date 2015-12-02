@@ -131,6 +131,8 @@
     <Compile Include="DependencyResolution\StructureMapDependencyScope.cs" />
     <Compile Include="DependencyResolution\TransientNestedContainerScope.cs" />
     <Compile Include="LocalService.cs" />
+    <Compile Include="Models\ITrackingNumberService.cs" />
+    <Compile Include="Models\TrackingNumberService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />

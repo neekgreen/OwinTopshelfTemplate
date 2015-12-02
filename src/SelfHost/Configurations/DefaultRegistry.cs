@@ -1,10 +1,11 @@
-﻿using System;
-using System.Linq;
-using StructureMap.Configuration.DSL;
-using StructureMap.Graph;
-
-namespace SelfHost.Configurations
+﻿namespace SelfHost.Configurations
 {
+    using System;
+    using System.Linq;
+    using StructureMap.Configuration.DSL;
+    using StructureMap.Graph;
+    using SelfHost.Models;
+
     public class DefaultRegistry : Registry
     {
         public DefaultRegistry()
@@ -14,6 +15,8 @@ namespace SelfHost.Configurations
                 s.TheCallingAssembly();
                 s.LookForRegistries();
             });
+
+            For<ITrackingNumberService>().Use<TrackingNumberService>();
         }
     }
 }
