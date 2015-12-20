@@ -27,7 +27,7 @@
 
                     s.ConstructUsing(() =>
                     {
-                        return ParentScope.GetInstance<LocalService>();
+                        return ParentScope.GetService(typeof(LocalService)) as LocalService;
                     });
 
                     s.WhenStarted(service => { service.Start(); });

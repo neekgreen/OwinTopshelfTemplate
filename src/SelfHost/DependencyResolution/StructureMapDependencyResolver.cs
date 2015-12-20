@@ -2,19 +2,36 @@
 {
     using System;
     using System.Linq;
+    using System.Net.Http;
+    using System.Web.Http.Controllers;
     using System.Web.Http.Dependencies;
+    using System.Web.Http.Dispatcher;
     using StructureMap;
 
-    public class StructureMapDependencyResolver : StructureMapDependencyScope, IDependencyResolver
+    public class StructureMapDependencyResolver :
+        StructureMapDependencyScope, IDependencyResolver, IHttpControllerActivator
     {
+        private readonly IContainer container;
+
         public StructureMapDependencyResolver(IContainer container)
-            : base(container) { }
+            : base(container)
+        {
+            this.container = container;
+            container.Inject<IHttpControllerActivator>(this);
+        }
 
         public IDependencyScope BeginScope()
         {
-            IContainer child = this.Container.GetNestedContainer();
+            return new StructureMapDependencyScope(container.GetNestedContainer());
+        }
 
-            return new StructureMapDependencyResolver(child);
+        public IHttpController Create(
+            HttpRequestMessage request,
+            HttpControllerDescriptor controllerDescriptor,
+            Type controllerType)
+        {
+            var scope = request.GetDependencyScope();
+            return scope.GetService(controllerType) as IHttpController;
         }
     }
 }

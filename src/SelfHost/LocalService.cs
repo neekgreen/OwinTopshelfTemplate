@@ -4,7 +4,7 @@
     using System.Linq;
     using Microsoft.Owin.Hosting;
 
-    public class LocalService
+    public class LocalService : IDisposable
     {
         private IDisposable webApp;
 
@@ -20,6 +20,11 @@
                 this.webApp.Dispose();
                 this.webApp = null;
             }
+        }
+
+        public void Dispose()
+        {
+
         }
     }
 }

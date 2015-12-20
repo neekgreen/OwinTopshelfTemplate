@@ -2,9 +2,9 @@
 {
     using System;
     using System.Linq;
-    using StructureMap.Configuration.DSL;
-    using StructureMap.Graph;
     using SelfHost.Models;
+    using StructureMap;
+    using StructureMap.Graph;
 
     public class DefaultRegistry : Registry
     {

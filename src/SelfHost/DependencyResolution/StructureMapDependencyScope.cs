@@ -1,99 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Practices.ServiceLocation;
-using StructureMap;
-
-namespace SelfHost.DependencyResolution
+﻿namespace SelfHost.DependencyResolution
 {
-    public class StructureMapDependencyScope : ServiceLocatorImplBase
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web.Http.Dependencies;
+    using StructureMap;
+
+    public class StructureMapDependencyScope : IDependencyScope
     {
-        private readonly INestedContainerScope nestedContainerScope;
+        private IContainer container;
 
         public StructureMapDependencyScope(IContainer container)
-            : this(container, new TransientNestedContainerScope()) { }
-
-        public StructureMapDependencyScope(IContainer container, INestedContainerScope nestedContainerScope)
         {
-            if (container == null)
-            {
-                throw new ArgumentNullException("container");
-            }
-
-            Container = container;
-            this.nestedContainerScope = nestedContainerScope;
+            this.container = container;
         }
 
-
-        public IContainer Container { get; set; }
-
-        public IContainer CurrentNestedContainer
+        public object GetService(Type serviceType)
         {
-            get { return nestedContainerScope.NestedContainer; }
-            set { nestedContainerScope.NestedContainer = value; }
-        }
-
-        public void CreateNestedContainer()
-        {
-            if (CurrentNestedContainer != null)
-            {
-                return;
-            }
-
-            CurrentNestedContainer = Container.GetNestedContainer();
-        }
-
-        public void Dispose()
-        {
-            DisposeNestedContainer();
-        }
-
-        public void DisposeNestedContainer()
-        {
-            if (CurrentNestedContainer != null)
-            {
-                CurrentNestedContainer.Dispose();
-                CurrentNestedContainer = null;
-            }
-        }
-
-        public void DisposeParentContainer()
-        {
-            if (Container != null)
-            {
-                Container.Dispose();
-                Container = null;
-            }
+            return serviceType.IsAbstract || serviceType.IsInterface
+                     ? container.TryGetInstance(serviceType)
+                     : container.GetInstance(serviceType);
         }
 
         public IEnumerable<object> GetServices(Type serviceType)
         {
-            return DoGetAllInstances(serviceType);
+            return container.GetAllInstances(serviceType).Cast<object>();
         }
 
-        protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
+        public void Dispose()
         {
-            return (CurrentNestedContainer ?? Container).GetAllInstances(serviceType).Cast<object>();
-        }
-
-        protected override object DoGetInstance(Type serviceType, string key)
-        {
-            IContainer container = (CurrentNestedContainer ?? Container);
-
-            if (string.IsNullOrEmpty(key))
+            if (container != null)
             {
-                return serviceType.IsAbstract || serviceType.IsInterface
-                    ? container.TryGetInstance(serviceType)
-                    : container.GetInstance(serviceType);
+                container.Dispose();
+                container = null;
             }
-
-            return container.GetInstance(serviceType, key);
-        }
-
-        public object TryGetInstance(Type type)
-        {
-            IContainer container = (CurrentNestedContainer ?? Container);
-            return container.TryGetInstance(type);
         }
     }
 }

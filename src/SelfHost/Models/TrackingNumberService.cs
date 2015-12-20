@@ -1,16 +1,19 @@
 ﻿namespace SelfHost.Models
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class TrackingNumberService : ITrackingNumberService
     {
+        private readonly Guid contextId = Guid.NewGuid();
+
         string ITrackingNumberService.GenerateTrackingNumber()
         {
-            return Guid.NewGuid().ToString();
+            return string.Format("{0}:{1}", contextId, Guid.NewGuid().ToString());
+        }
+        void IDisposable.Dispose()
+        {
+            //# Ensure dispose is being called.
         }
     }
 }
