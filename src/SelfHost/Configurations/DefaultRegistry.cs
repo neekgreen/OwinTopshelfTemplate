@@ -17,6 +17,8 @@
             });
 
             For<ITrackingNumberService>().Use<TrackingNumberService>();
+            For<IUserContext>().Use<UserContext>();
+            For<ITrackingNumberEngine>().Use<TrackingNumberEngine>().Singleton();
         }
     }
 }

@@ -124,8 +124,12 @@
     <Compile Include="DependencyResolution\StructureMapDependencyResolver.cs" />
     <Compile Include="DependencyResolution\StructureMapDependencyScope.cs" />
     <Compile Include="LocalService.cs" />
+    <Compile Include="Models\ITrackingNumberEngine.cs" />
     <Compile Include="Models\ITrackingNumberService.cs" />
+    <Compile Include="Models\IUserContext.cs" />
+    <Compile Include="Models\TrackingNumberEngine.cs" />
     <Compile Include="Models\TrackingNumberService.cs" />
+    <Compile Include="Models\UserContext.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
